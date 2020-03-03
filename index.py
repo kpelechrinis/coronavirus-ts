@@ -24,10 +24,15 @@ def check_dropdown_update_country(attr, old, new):
 		tot_deaths = [sum(deaths[d]) for d in dates]
 		tot_recovered = [sum(recovered[d]) for d in dates]
 	else:
-		print(dropdown_countries.value)
-		confirmed_filter = confirmed[confirmed['Country/Region'] == dropdown_countries.value]
-		deaths_filter = deaths[deaths['Country/Region'] == dropdown_countries.value]
-		recovered_filter = recovered[recovered['Country/Region'] == dropdown_countries.value]
+		reg = dropdown_countries.value.split(": ")
+		if (len(reg) == 1):
+			confirmed_filter = confirmed[confirmed['Country/Region'] == dropdown_countries.value]
+			deaths_filter = deaths[deaths['Country/Region'] == dropdown_countries.value]
+			recovered_filter = recovered[recovered['Country/Region'] == dropdown_countries.value]
+		else:
+			confirmed_filter = confirmed[(confirmed['Country/Region'] == reg[0]) & (confirmed['Province/State'] == reg[1])]
+			deaths_filter = deaths[(deaths['Country/Region'] == reg[0]) & (deaths['Province/State'] == reg[1])]
+			recovered_filter = recovered[(recovered['Country/Region'] == reg[0]) & (recovered['Province/State'] == reg[1])]
 		tot_confirmed = [sum(confirmed_filter[d]) for d in dates]
 		tot_deaths = [sum(deaths_filter[d]) for d in dates]
 		tot_recovered = [sum(recovered_filter[d]) for d in dates]
@@ -100,7 +105,15 @@ plogo.yaxis.visible = False
 div1 = Div(text="""<font size=6><b><h>Coronavirus data</b></h></font></br></br><font size=5>This is a simple time-series visualization of the confirmed cases, deaths and recoveries from the coronavirus according to the <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins dataset</a> that is updated daily. The data are updated automatically (approximately once every day). <br>Visualization from, K. Pelechrinis (@kpelechrinis) - School of Computing and Information, University of Pittsburgh. </font><br></br></br><br></br></br>""",width=800, height=250)
 
 menu_countries = ["World"]+list(np.sort(list(confirmed['Country/Region'].unique())))
-dropdown_countries = Select(title = "Country/Region", value = "World", options = menu_countries)
+menu_china = list(np.sort(list(confirmed[confirmed['Country/Region'] == "Mainland China"]['Province/State'].unique())))
+menu_china = ["Mainland China: "+m for m in menu_china]
+menu_us = list(np.sort(list(confirmed[confirmed['Country/Region'] == "US"]['Province/State'].unique())))
+menu_us = ["US: "+m for m in menu_us]
+menu_canada = list(np.sort(list(confirmed[confirmed['Country/Region'] == "Canada"]['Province/State'].unique())))
+menu_canada = ["Canada: "+m for m in menu_canada]
+menu_australia = list(np.sort(list(confirmed[confirmed['Country/Region'] == "Australia"]['Province/State'].unique())))
+menu_australia = ["Australia: "+m for m in menu_australia]
+dropdown_countries = Select(title = "Country/Region", value = "World", options = menu_countries+menu_china+menu_us+menu_canada+menu_australia)
 dropdown_countries.on_change('value',check_dropdown_update_country)
 
 layout = layout([[div1,plogo],[p,],[dropdown_countries,],[table,]])
