@@ -55,9 +55,9 @@ global recovered
 global dates
 global tot_confirmed,tot_deaths,tot_recovered,data_df
 
-confirmed = pd.read_csv("time_series_19-covid-Confirmed.csv")
-deaths = pd.read_csv("time_series_19-covid-Deaths.csv")
-recovered = pd.read_csv("time_series_19-covid-Recovered.csv")
+confirmed = pd.read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv")
+deaths = pd.read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv")
+recovered = pd.read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv")
 
 dates = list(confirmed.columns[4:len(confirmed.columns)])
 tot_confirmed = [sum(confirmed[d]) for d in dates]
