@@ -86,7 +86,7 @@ table = DataTable(source=source, columns=columns, editable=True, height=550)
 
 #############################
 
-div1 = Div(text="""<font size=6><b><h>Coronavirus data</b></h></font></br></br><font size=5>This is a simple time-series visualization of the confirmed cases, deaths and recoveries from the corona virues according to the <a href="https://github.com/CSSEGISandData/COVID-19">John Hopkins dataset</a> that is updated daily.</font><br></br></br><br></br></br>""",width=1950, height=150)
+div1 = Div(text="""<font size=6><b><h>Coronavirus data</b></h></font></br></br><font size=5>This is a simple time-series visualization of the confirmed cases, deaths and recoveries from the corona virues according to the <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins dataset</a> that is updated daily.</font><br></br></br><br></br></br>""",width=1950, height=150)
 
 
 menu_countries = ["World"]+list(np.sort(list(confirmed['Country/Region'].unique())))
