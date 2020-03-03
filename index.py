@@ -1,4 +1,3 @@
-from sklearn.model_selection import train_test_split
 from bokeh.layouts import layout, row, column
 from bokeh.plotting import save, figure, output_file, show, Column
 from bokeh.models.glyphs import Text, ImageURL
@@ -7,17 +6,10 @@ from bokeh.models.widgets.buttons import Button
 from bokeh.models.widgets import Slider,Select,PreText,Dropdown,TextInput,AutocompleteInput,CheckboxGroup,RadioGroup,RangeSlider
 from bokeh.transform import cumsum
 from bokeh.io import curdoc
-from scipy.misc import imread
 import pandas as pd
 import numpy as np
-import sys
-import psutil
-import logging
-from functools import partial
-import warnings
 
 warnings.filterwarnings("ignore")
-
 
 ########### Dropbdown countries ###########
 
