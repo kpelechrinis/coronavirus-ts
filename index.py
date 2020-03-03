@@ -47,7 +47,7 @@ def check_dropdown_update_country(attr, old, new):
 		TableColumn(field="Recovered",title="Recovered")]
 	table = DataTable(source=nsource, columns=columns, editable=True, height=550)
 	layout.children[1] = p
-	layout.children[2] = table
+	layout.children[3] = table
 
 global confirmed
 global deaths
