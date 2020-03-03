@@ -93,5 +93,5 @@ menu_countries = ["World"]+list(np.sort(list(confirmed['Country/Region'].unique(
 dropdown_countries = Select(title = "Country/Region", value = "World", options = menu_countries)
 dropdown_countries.on_change('value',check_dropdown_update_country)
 
-layout = layout([[div1,],[p,],[table,],[dropdown_countries,]])
+layout = layout([[div1,],[p,],[dropdown_countries,],[table,]])
 curdoc().add_root(layout)
