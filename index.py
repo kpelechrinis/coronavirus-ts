@@ -97,7 +97,7 @@ plogo.image_rgba(image=[logo],x=[0], y=[0], dw = [25], dh = [15])
 plogo.xaxis.visible = False
 plogo.yaxis.visible = False
 
-div1 = Div(text="""<font size=6><b><h>Coronavirus data</b></h></font></br></br><font size=5>This is a simple time-series visualization of the confirmed cases, deaths and recoveries from the corona virues according to the <a href="https://github.com/CSSEGISandData/COVID-19">John Hopkins dataset</a> that is updated daily. The data are updated automatically (approximately once every day). <br>Vizualization from, K. Pelechrinis (@kpelechrinis) - School of Computing and Information, University of Pittsburgh. </font><br></br></br><br></br></br>""",width=800, height=250)
+div1 = Div(text="""<font size=6><b><h>Coronavirus data</b></h></font></br></br><font size=5>This is a simple time-series visualization of the confirmed cases, deaths and recoveries from the coronavirus according to the <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins dataset</a> that is updated daily. The data are updated automatically (approximately once every day). <br>Visualization from, K. Pelechrinis (@kpelechrinis) - School of Computing and Information, University of Pittsburgh. </font><br></br></br><br></br></br>""",width=800, height=250)
 
 menu_countries = ["World"]+list(np.sort(list(confirmed['Country/Region'].unique())))
 dropdown_countries = Select(title = "Country/Region", value = "World", options = menu_countries)
