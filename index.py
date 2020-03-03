@@ -9,8 +9,6 @@ from bokeh.io import curdoc
 import pandas as pd
 import numpy as np
 
-warnings.filterwarnings("ignore")
-
 ########### Dropbdown countries ###########
 
 def check_dropdown_update_country(attr, old, new):
