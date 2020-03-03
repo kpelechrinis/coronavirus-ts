@@ -5,6 +5,7 @@ from bokeh.models import DataTable, TableColumn, PointDrawTool, ColumnDataSource
 from bokeh.models.widgets.buttons import Button
 from bokeh.models.widgets import Slider,Select,PreText,Dropdown,TextInput,AutocompleteInput,CheckboxGroup,RadioGroup,RangeSlider
 from bokeh.transform import cumsum
+from scipy.misc import imread
 from bokeh.io import curdoc
 import pandas as pd
 import numpy as np
@@ -85,13 +86,22 @@ columns = [TableColumn(field="Date", title="Date"),
 table = DataTable(source=source, columns=columns, editable=True, height=550)
 
 #############################
+logo = imread("pitt-sci.png")
+## there is a bug in bokeh image_rgba to be used later that requires the following flipping
+## https://github.com/bokeh/bokeh/issues/1666
+logo = logo[::-1]
+plogo = figure(x_range=(0,25),y_range=(0,15), tools = [], plot_width=600,plot_height=200)
+plogo.xgrid.grid_line_color = None
+plogo.ygrid.grid_line_color = None
+plogo.image_rgba(image=[logo],x=[0], y=[0], dw = [25], dh = [15])
+plogo.xaxis.visible = False
+plogo.yaxis.visible = False
 
-div1 = Div(text="""<font size=6><b><h>Coronavirus data</b></h></font></br></br><font size=5>This is a simple time-series visualization of the confirmed cases, deaths and recoveries from the corona virues according to the <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins dataset</a> that is updated daily.</font><br></br></br><br></br></br>""",width=1950, height=150)
-
+div1 = Div(text="""<font size=6><b><h>Coronavirus data</b></h></font></br></br><font size=5>This is a simple time-series visualization of the confirmed cases, deaths and recoveries from the corona virues according to the <a href="https://github.com/CSSEGISandData/COVID-19">John Hopkins dataset</a> that is updated daily. The data are updated automatically (approximately once every day). <br>Vizualization from, K. Pelechrinis (@kpelechrinis) - School of Computing and Information, University of Pittsburgh. </font><br></br></br><br></br></br>""",width=800, height=250)
 
 menu_countries = ["World"]+list(np.sort(list(confirmed['Country/Region'].unique())))
 dropdown_countries = Select(title = "Country/Region", value = "World", options = menu_countries)
 dropdown_countries.on_change('value',check_dropdown_update_country)
 
-layout = layout([[div1,],[p,],[dropdown_countries,],[table,]])
+layout = layout([[div1,plogo],[p,],[dropdown_countries,],[table,]])
 curdoc().add_root(layout)
