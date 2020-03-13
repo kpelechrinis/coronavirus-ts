@@ -3,6 +3,7 @@ from bokeh.plotting import save, figure, output_file, show, Column
 from bokeh.models.glyphs import Text, ImageURL
 from bokeh.models import DataTable, TableColumn, PointDrawTool, ColumnDataSource,Arrow, OpenHead, NormalHead, VeeHead, HoverTool, Div
 from bokeh.models.widgets.buttons import Button
+from bokeh.models import Tabs, Panel
 from bokeh.models.widgets import Slider,Select,PreText,Dropdown,TextInput,AutocompleteInput,CheckboxGroup,RadioGroup,RangeSlider
 from bokeh.transform import cumsum
 from scipy.misc import imread
@@ -14,6 +15,7 @@ import numpy as np
 
 def check_dropdown_update_country(attr, old, new):
 	global confirmed
+	global panels
 	global deaths
 	global recovered
 	global dates 
@@ -36,28 +38,34 @@ def check_dropdown_update_country(attr, old, new):
 		tot_confirmed = [sum(confirmed_filter[d]) for d in dates]
 		tot_deaths = [sum(deaths_filter[d]) for d in dates]
 		tot_recovered = [sum(recovered_filter[d]) for d in dates]
-    
-	p = figure(plot_width=1000, plot_height=550, x_axis_type="datetime", title="COVID-19 cumulative data (@kpelechrinis) ")
-	data_df = pd.DataFrame({'Date':dates, 'Confirmed': tot_confirmed, 'Deaths': tot_deaths, 'Recovered': tot_recovered})
-	data_df['Date'] = pd.to_datetime(data_df['Date'])
-	p.line(x=data_df['Date'], y=tot_confirmed, line_width=4, color="red", alpha=0.8,legend="Confirmed")
-	p.line(x=data_df['Date'], y=tot_deaths, line_width=4, color="black", alpha=0.8,legend="Deaths")
-	p.line(x=data_df['Date'], y=tot_recovered, line_width=4, color="green", alpha=0.8,legend="Recovered")
-	p.legend.location = "top_left"
-	nsource = ColumnDataSource({
-		'Date': list(dates), 'Confirmed': list(data_df['Confirmed']), 'Deaths': list(data_df['Deaths']), 'Recovered': list(data_df['Recovered'])
-	})
+    	
+	panels = []
+	for axis_type in ["linear", "log"]:
+		p = figure(plot_width=1000, plot_height=550, y_axis_type = axis_type, x_axis_type="datetime", title="COVID-19 cumulative data (@kpelechrinis) ")
+		panel = Panel(child=p, title=axis_type)
+		panels.append(panel)
+		tabs = Tabs(tabs=panels)
+		data_df = pd.DataFrame({'Date':dates, 'Confirmed': tot_confirmed, 'Deaths': tot_deaths, 'Recovered': tot_recovered})
+		data_df['Date'] = pd.to_datetime(data_df['Date'])
+		p.line(x=data_df['Date'], y=tot_confirmed, line_width=4, color="red", alpha=0.8,legend="Confirmed")
+		p.line(x=data_df['Date'], y=tot_deaths, line_width=4, color="black", alpha=0.8,legend="Deaths")
+		p.line(x=data_df['Date'], y=tot_recovered, line_width=4, color="green", alpha=0.8,legend="Recovered")
+		p.legend.location = "top_left"
+		nsource = ColumnDataSource({
+			'Date': list(dates), 'Confirmed': list(data_df['Confirmed']), 'Deaths': list(data_df['Deaths']), 'Recovered': list(data_df['Recovered'])
+		})
 	columns = [TableColumn(field="Date", title="Date"),
 		TableColumn(field="Confirmed", title="Confirmed"),
 		TableColumn(field="Deaths", title="Deaths"),
 		TableColumn(field="Recovered",title="Recovered")]
 	table = DataTable(source=nsource, columns=columns, editable=True, height=550)
-	layout.children[1] = p
+	layout.children[1] = tabs
 	layout.children[3] = table
 
 global confirmed
 global deaths
 global recovered 
+global panels
 global dates
 global tot_confirmed,tot_deaths,tot_recovered,data_df
 
@@ -70,18 +78,23 @@ tot_confirmed = [sum(confirmed[d]) for d in dates]
 tot_deaths = [sum(deaths[d]) for d in dates]
 tot_recovered = [sum(recovered[d]) for d in dates]
 
-p = figure(plot_width=1000, plot_height=550, x_axis_type="datetime", title="COVID-19 cumulative data (@kpelechrinis)")
+panels = []
 
-data_df = pd.DataFrame({'Date':dates, 'Confirmed': tot_confirmed, 'Deaths': tot_deaths, 'Recovered': tot_recovered})
-data_df['Date'] = pd.to_datetime(data_df['Date'])
-p.line(x=data_df['Date'], y=data_df['Confirmed'],  line_width=4, color="red", alpha=0.8, legend="Confirmed")
-p.line(x=data_df['Date'], y=data_df['Deaths'],  line_width=4, color="black", alpha=0.8, legend="Deaths")
-p.line(x=data_df['Date'], y=data_df['Recovered'],  line_width=4, color="green", alpha=0.8, legend="Recovered")
-p.legend.location = "top_left"
+for axis_type in ["linear", "log"]:
+	p = figure(plot_width=1000, plot_height=550, y_axis_type = axis_type, x_axis_type="datetime", title="COVID-19 cumulative data (@kpelechrinis)")
+	panel = Panel(child=p, title=axis_type)
+	panels.append(panel)
+	tabs = Tabs(tabs=panels)
+	data_df = pd.DataFrame({'Date':dates, 'Confirmed': tot_confirmed, 'Deaths': tot_deaths, 'Recovered': tot_recovered})
+	data_df['Date'] = pd.to_datetime(data_df['Date'])
+	p.line(x=data_df['Date'], y=data_df['Confirmed'],  line_width=4, color="red", alpha=0.8, legend="Confirmed")
+	p.line(x=data_df['Date'], y=data_df['Deaths'],  line_width=4, color="black", alpha=0.8, legend="Deaths")
+	p.line(x=data_df['Date'], y=data_df['Recovered'],  line_width=4, color="green", alpha=0.8, legend="Recovered")
+	p.legend.location = "top_left"
 
-source = ColumnDataSource({
-	'Date': list(dates), 'Confirmed': list(data_df['Confirmed']), 'Deaths': list(data_df['Deaths']), 'Recovered': list(data_df['Recovered'])
-})
+	source = ColumnDataSource({
+		'Date': list(dates), 'Confirmed': list(data_df['Confirmed']), 'Deaths': list(data_df['Deaths']), 'Recovered': list(data_df['Recovered'])
+	})
 
 columns = [TableColumn(field="Date", title="Date"),
            TableColumn(field="Confirmed", title="Confirmed"),
@@ -116,5 +129,5 @@ menu_australia = ["Australia: "+m for m in menu_australia]
 dropdown_countries = Select(title = "Country/Region", value = "World", options = menu_countries+menu_china+menu_us+menu_canada+menu_australia)
 dropdown_countries.on_change('value',check_dropdown_update_country)
 
-layout = layout([[div1,plogo],[p,],[dropdown_countries,],[table,]])
+layout = layout([[div1,plogo],[tabs,],[dropdown_countries,],[table,]])
 curdoc().add_root(layout)
